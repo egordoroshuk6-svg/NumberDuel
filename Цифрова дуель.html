@@ -1,0 +1,1099 @@
+ 
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Цифрова дуель</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0c0d12;
+      --panel:rgba(255,255,255,.07);
+      --line:rgba(255,255,255,.1);
+      --text:#f6f2ea;
+      --muted:#b8b2a8;
+      --gold:#f1b64a;
+      --gold-soft:#ffd98d;
+      --cold:#71d5ff;
+      --hot:#ffb347;
+      --ok:#8df0a3;
+      --danger:#ff8a8a;
+      --violet:#9f8dff;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+      --radius:24px;
+      --container:1100px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Manrope",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 15%, rgba(241,182,74,.15), transparent 20%),
+        radial-gradient(circle at 85% 10%, rgba(159,141,255,.15), transparent 22%),
+        linear-gradient(135deg,#090a0f,#111522 60%,#171b2a);
+      min-height:100vh;
+    }
+
+    .wrap{width:min(calc(100% - 24px), var(--container)); margin:0 auto}
+    .topbar{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter:blur(14px);
+      background:rgba(8,8,12,.55);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .topbar-inner{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:14px 0;
+      gap:16px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+    }
+    .mark{
+      width:42px; height:42px; border-radius:14px;
+      background:conic-gradient(from 220deg,var(--gold),var(--violet),#7ef0c7,var(--gold));
+      position:relative;
+    }
+    .mark::after{
+      content:""; position:absolute; inset:4px; border-radius:11px;
+      background:#121522;
+    }
+    .brand strong{
+      display:block;
+      font-family:"Unbounded",sans-serif;
+      font-size:.9rem;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+    .brand span{color:var(--muted); font-size:.9rem}
+
+    .hero{padding:34px 0 20px}
+    .hero-box{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:20px;
+      align-items:stretch;
+    }
+    .hero-copy,.hero-art,.panel,.side{
+      border-radius:var(--radius);
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      backdrop-filter:blur(14px);
+      box-shadow:var(--shadow);
+    }
+    .hero-copy{padding:24px}
+    .hero-copy .eyebrow{
+      display:inline-flex;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.05);
+      color:#f5dca8;
+      font-size:.82rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    h1,h2,h3{
+      margin:0;
+      font-family:"Unbounded",sans-serif;
+      line-height:1.03;
+      letter-spacing:-.03em;
+    }
+    h1{
+      font-size:clamp(2.2rem,6vw,4.8rem);
+      margin:18px 0 18px;
+      max-width:10ch;
+    }
+    .hero-copy p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+      max-width:58ch;
+    }
+    .hero-art{
+      min-height:300px;
+      display:grid;
+      place-items:center;
+      padding:20px;
+    }
+    .bubble-wrap{
+      display:flex; flex-wrap:wrap; gap:12px; justify-content:center;
+      max-width:420px;
+    }
+    .bubble{
+      padding:12px 14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      font-family:"Unbounded",sans-serif;
+      font-size:.9rem;
+    }
+
+    .main{padding:14px 0 60px}
+    .layout{
+      display:grid;
+      grid-template-columns:.9fr 1.1fr;
+      gap:20px;
+      align-items:start;
+    }
+    .side,.panel{padding:22px}
+    .side p{
+      color:var(--muted);
+      line-height:1.7;
+    }
+    .mini-list{display:grid; gap:12px; margin-top:18px}
+    .mini-item{
+      display:grid; grid-template-columns:42px 1fr; gap:10px;
+      align-items:start;
+    }
+    .mini-num{
+      width:42px; height:42px; border-radius:14px;
+      display:grid; place-items:center;
+      background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+      color:#111;
+      font-family:"Unbounded",sans-serif;
+      font-size:.85rem;
+    }
+    .mini-item span{color:var(--muted); font-size:.94rem; line-height:1.55}
+
+    .panel-head{
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      padding-bottom:12px;
+      margin-bottom:18px;
+    }
+    .badge{
+      padding:9px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      color:#f4ddaf;
+      font-size:.9rem;
+      font-weight:700;
+    }
+
+    .mode-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+    .mode-grid input{display:none}
+    .mode-card{
+      display:block;
+      padding:16px;
+      border-radius:20px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      cursor:pointer;
+      min-height:110px;
+      transition:.2s ease;
+    }
+    .mode-card strong{
+      display:block;
+      margin-bottom:8px;
+      font-family:"Unbounded",sans-serif;
+      font-size:.95rem;
+    }
+    .mode-card span{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.5;
+    }
+    .mode-grid input:checked + .mode-card{
+      border-color:rgba(241,182,74,.45);
+      background:linear-gradient(180deg, rgba(241,182,74,.14), rgba(255,255,255,.04));
+      transform:translateY(-2px);
+    }
+
+    .grid-2,.grid-4{
+      display:grid;
+      gap:12px;
+    }
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+    .grid-4{grid-template-columns:repeat(4,1fr)}
+    .box{
+      padding:16px;
+      border-radius:20px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .box .label{
+      display:block;
+      color:#e6dac0;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      font-size:.78rem;
+      font-weight:800;
+      margin-bottom:10px;
+    }
+    .info-label{
+      display:block;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.75rem;
+      margin-bottom:8px;
+    }
+    .info-value{
+      font-family:"Unbounded",sans-serif;
+      font-size:.92rem;
+      line-height:1.35;
+    }
+
+    .segmented{
+      display:flex; flex-wrap:wrap; gap:10px;
+    }
+    .segmented input{display:none}
+    .segmented label{
+      min-height:42px;
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.04);
+      display:inline-flex; align-items:center; justify-content:center;
+      cursor:pointer;
+      font-weight:800;
+      font-size:.92rem;
+    }
+    .segmented input:checked + label{
+      color:#171109;
+      background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+      border-color:transparent;
+    }
+
+    .field{
+      display:grid;
+      gap:8px;
+    }
+    .field label{
+      color:#ddd4c2;
+      font-size:.92rem;
+      font-weight:700;
+    }
+    input[type="number"], textarea{
+      width:100%;
+      min-height:58px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(8,8,12,.45);
+      color:var(--text);
+      padding:0 16px;
+      font-size:1rem;
+      font-family:"Manrope",sans-serif;
+      font-weight:700;
+      outline:none;
+    }
+    textarea{
+      min-height:110px;
+      padding:14px 16px;
+      resize:vertical;
+    }
+    .hint{
+      color:var(--muted);
+      font-size:.88rem;
+      line-height:1.5;
+    }
+
+    .row{
+      display:flex; flex-wrap:wrap; gap:12px;
+    }
+    .btn{
+      appearance:none; border:0; cursor:pointer;
+      min-height:52px; padding:0 20px;
+      border-radius:16px;
+      font-family:"Manrope",sans-serif;
+      font-weight:800;
+      transition:.18s ease;
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn-primary{
+      color:#171109;
+      background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+      box-shadow:0 12px 30px rgba(241,182,74,.24);
+    }
+    .btn-secondary{
+      color:var(--text);
+      background:rgba(255,255,255,.05);
+      border:1px solid var(--line);
+    }
+    .btn-danger{
+      color:#ffe8e8;
+      background:rgba(255,138,138,.12);
+      border:1px solid rgba(255,138,138,.25);
+    }
+
+    .feedback{
+      margin-top:16px;
+      min-height:74px;
+      display:flex; align-items:center;
+      padding:16px;
+      border-radius:20px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      font-weight:700;
+      line-height:1.5;
+    }
+    .feedback.cold{background:rgba(113,213,255,.1); border-color:rgba(113,213,255,.28); color:#dff6ff}
+    .feedback.hot{background:rgba(255,179,71,.1); border-color:rgba(255,179,71,.28); color:#ffe7b8}
+    .feedback.more{background:rgba(118,239,192,.08); border-color:rgba(118,239,192,.28)}
+    .feedback.less{background:rgba(255,138,138,.08); border-color:rgba(255,138,138,.28)}
+    .feedback.win{background:rgba(141,240,163,.12); border-color:rgba(141,240,163,.28); color:#e9ffef}
+    .feedback.lose{background:rgba(159,141,255,.12); border-color:rgba(159,141,255,.28); color:#e7e0ff}
+
+    .attempts,.history{
+      display:flex; flex-wrap:wrap; gap:10px;
+      margin-top:16px;
+    }
+    .attempt,.history-item{
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      font-weight:700;
+    }
+    .attempt{
+      width:42px; height:42px;
+      display:grid; place-items:center;
+      padding:0;
+      font-family:"Unbounded",sans-serif;
+      font-size:.85rem;
+      color:var(--muted);
+    }
+    .attempt.used{
+      color:#111;
+      background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+      border-color:transparent;
+    }
+
+    .screen{display:none}
+    .screen.active{display:block}
+
+    .footer{
+      padding:14px 0 28px;
+      color:var(--muted);
+      font-size:.9rem;
+    }
+
+    @media (max-width:980px){
+      .hero-box,.layout{grid-template-columns:1fr}
+    }
+    @media (max-width:760px){
+      .mode-grid,.grid-2,.grid-4{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="brand">
+        <div class="mark"></div>
+        <div>
+          <strong>Цифрова дуель</strong>
+          <span>вгадай число</span>
+        </div>
+      </div>
+      <div class="badge" id="topBadge">Готово до гри</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap hero-box">
+        <div class="hero-copy">
+          <div class="eyebrow">Гра для телефону</div>
+          <h1>Цифрова дуель.</h1>
+          <p>
+            Можна грати самому, на одному телефоні або підготувати посилання для друга.
+            Налаштовуй діапазон, спроби, час і тип підказок.
+          </p>
+        </div>
+        <div class="hero-art">
+          <div class="bubble-wrap">
+            <div class="bubble">Соло</div>
+            <div class="bubble">На двох</div>
+            <div class="bubble">По лінку</div>
+            <div class="bubble">Антарктида</div>
+            <div class="bubble">Тепліше</div>
+            <div class="bubble">Жерло вулкана</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="main">
+      <div class="wrap layout">
+        <aside class="side">
+          <h2>Що є в грі</h2>
+          <p>
+            Три режими гри, таймер або гра без часу, свій діапазон чисел,
+            класичні підказки або “гаряче / холодно”.
+          </p>
+
+          <div class="mini-list">
+            <div class="mini-item">
+              <div class="mini-num">1</div>
+              <div>
+                <strong>Наодинці</strong>
+                <span>Гра сама загадує випадкове число.</span>
+              </div>
+            </div>
+            <div class="mini-item">
+              <div class="mini-num">2</div>
+              <div>
+                <strong>На одному телефоні</strong>
+                <span>Один загадує, інший вгадує.</span>
+              </div>
+            </div>
+            <div class="mini-item">
+              <div class="mini-num">3</div>
+              <div>
+                <strong>На відстані</strong>
+                <span>Ти створюєш посилання і кидаєш другу.</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h3>Ігрова панель</h3>
+            <div class="badge" id="phaseBadge">Налаштування</div>
+          </div>
+
+          <div class="screen active" id="screenSetup">
+            <div class="mode-grid">
+              <label>
+                <input type="radio" name="gameMode" value="solo" checked>
+                <span class="mode-card">
+                  <strong>Наодинці</strong>
+                  <span>Число вибирається випадково.</span>
+                </span>
+              </label>
+
+              <label>
+                <input type="radio" name="gameMode" value="local">
+                <span class="mode-card">
+                  <strong>На одному телефоні</strong>
+                  <span>Перший загадує, другий вгадує.</span>
+                </span>
+              </label>
+
+              <label>
+                <input type="radio" name="gameMode" value="remote">
+                <span class="mode-card">
+                  <strong>На відстані</strong>
+                  <span>Створюється посилання для друга.</span>
+                </span>
+              </label>
+            </div>
+
+            <div class="grid-2">
+              <div class="box">
+                <span class="label">Підказки</span>
+                <div class="segmented">
+                  <input type="radio" name="hintMode" id="classic" value="classic">
+                  <label for="classic">Класика</label>
+                  <input type="radio" name="hintMode" id="hotcold" value="hotcold" checked>
+                  <label for="hotcold">Гаряче / холодно</label>
+                </div>
+              </div>
+
+              <div class="box">
+                <span class="label">Час</span>
+                <div class="segmented">
+                  <input type="radio" name="timeMode" id="timed" value="timed" checked>
+                  <label for="timed">З таймером</label>
+                  <input type="radio" name="timeMode" id="untimed" value="untimed">
+                  <label for="untimed">Без часу</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-top:12px;">
+              <div class="field">
+                <label for="minInput">Мінімальне число</label>
+                <input id="minInput" type="number" value="1">
+              </div>
+              <div class="field">
+                <label for="maxInput">Максимальне число</label>
+                <input id="maxInput" type="number" value="100">
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-top:12px;">
+              <div class="field">
+                <label for="attemptsInput">Кількість спроб</label>
+                <input id="attemptsInput" type="number" value="5" min="1">
+              </div>
+              <div class="field">
+                <label for="timeInput">Час у секундах</label>
+                <input id="timeInput" type="number" value="60" min="5">
+              </div>
+            </div>
+
+            <div class="field" id="secretField" style="margin-top:12px;">
+              <label for="secretInput">Секретне число</label>
+              <input id="secretInput" type="number" placeholder="Введи секретне число">
+              <div class="hint" id="secretHint">У соло-режимі число буде вибране випадково.</div>
+            </div>
+
+            <div class="grid-4" style="margin-top:16px;">
+              <div class="box"><span class="info-label">Режим</span><div class="info-value" id="infoMode">Наодинці</div></div>
+              <div class="box"><span class="info-label">Діапазон</span><div class="info-value" id="infoRange">1 — 100</div></div>
+              <div class="box"><span class="info-label">Спроби</span><div class="info-value" id="infoAttempts">5</div></div>
+              <div class="box"><span class="info-label">Час</span><div class="info-value" id="infoTime">60 секунд</div></div>
+            </div>
+
+            <div class="row" style="margin-top:18px;">
+              <button class="btn btn-primary" id="createGameBtn">Почати / Створити гру</button>
+              <button class="btn btn-secondary" id="resetBtn">Скинути</button>
+            </div>
+          </div>
+
+          <div class="screen" id="screenReady">
+            <p class="hint" id="readyText">Гру підготовлено.</p>
+
+            <div class="grid-4" style="margin-top:16px;">
+              <div class="box"><span class="info-label">Режим</span><div class="info-value" id="readyMode">—</div></div>
+              <div class="box"><span class="info-label">Діапазон</span><div class="info-value" id="readyRange">—</div></div>
+              <div class="box"><span class="info-label">Спроби</span><div class="info-value" id="readyAttempts">—</div></div>
+              <div class="box"><span class="info-label">Час</span><div class="info-value" id="readyTime">—</div></div>
+            </div>
+
+            <div id="shareArea" style="display:none; margin-top:16px;">
+              <div class="field">
+                <label for="shareLink">Посилання для друга</label>
+                <textarea id="shareLink" readonly></textarea>
+                <div class="row">
+                  <button class="btn btn-primary" id="copyLinkBtn">Скопіювати посилання</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:18px;">
+              <button class="btn btn-primary" id="startGameBtn">Почати вгадування</button>
+              <button class="btn btn-secondary" id="backBtn">Назад</button>
+            </div>
+          </div>
+
+          <div class="screen" id="screenRemoteInfo">
+            <p class="hint">
+              Тобі надіслали гру. Тут уже задані правила і налаштування. Натисни кнопку нижче, щоб почати вгадування.
+            </p>
+
+            <div class="grid-4" style="margin-top:16px;">
+              <div class="box"><span class="info-label">Режим</span><div class="info-value">На відстані</div></div>
+              <div class="box"><span class="info-label">Діапазон</span><div class="info-value" id="remoteRange">—</div></div>
+              <div class="box"><span class="info-label">Спроби</span><div class="info-value" id="remoteAttempts">—</div></div>
+              <div class="box"><span class="info-label">Час</span><div class="info-value" id="remoteTime">—</div></div>
+            </div>
+
+            <div class="row" style="margin-top:18px;">
+              <button class="btn btn-primary" id="remoteStartBtn">Почати вгадування</button>
+            </div>
+          </div>
+
+          <div class="screen" id="screenGame">
+            <div class="field">
+              <label for="guessInput">Твоя спроба</label>
+              <input id="guessInput" type="number" placeholder="Введи число">
+              <div class="hint" id="guessHint">Вводь число в межах діапазону.</div>
+            </div>
+
+            <div class="grid-4" style="margin-top:16px;">
+              <div class="box"><span class="info-label">Залишилось спроб</span><div class="info-value" id="triesLeft">5</div></div>
+              <div class="box"><span class="info-label">Час</span><div class="info-value" id="timerLeft">60 с</div></div>
+              <div class="box"><span class="info-label">Остання дія</span><div class="info-value" id="lastAction">Очікуємо першу спробу</div></div>
+              <div class="box"><span class="info-label">Статус</span><div class="info-value" id="roundStatus">Гра триває</div></div>
+            </div>
+
+            <div class="feedback" id="feedbackBox">Зроби першу спробу — і гра дасть підказку.</div>
+            <div class="attempts" id="attemptsRow"></div>
+            <div class="history" id="historyRow"></div>
+
+            <div id="replyArea" style="display:none; margin-top:16px;">
+              <div class="field">
+                <label for="replyLink">Посилання у відповідь</label>
+                <textarea id="replyLink" readonly></textarea>
+                <div class="row">
+                  <button class="btn btn-primary" id="copyReplyBtn">Скопіювати відповідь</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:18px;">
+              <button class="btn btn-primary" id="guessBtn">Перевірити</button>
+              <button class="btn btn-secondary" id="newGameBtn">Нова гра</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">Цифрова дуель · соло · локально · по посиланню</div>
+  </footer>
+
+  <script>
+    const state = {
+      mode: "solo",
+      config: {
+        min: 1,
+        max: 100,
+        attempts: 5,
+        hintMode: "hotcold",
+        timeMode: "timed",
+        timeLimit: 60
+      },
+      secret: null,
+      triesUsed: 0,
+      guesses: [],
+      timerLeft: 60,
+      timerId: null,
+      gameOver: false,
+      remoteGame: false
+    };
+
+    const $ = id => document.getElementById(id);
+
+    function setScreen(id){
+      ["screenSetup","screenReady","screenRemoteInfo","screenGame"].forEach(s => $(s).classList.remove("active"));
+      $(id).classList.add("active");
+      $("phaseBadge").textContent =
+        id === "screenSetup" ? "Налаштування" :
+        id === "screenReady" ? "Підготовка" :
+        id === "screenRemoteInfo" ? "Гра по лінку" :
+        "Гра";
+    }
+
+    function readMode(){
+      const el = document.querySelector('input[name="gameMode"]:checked');
+      return el ? el.value : "solo";
+    }
+
+    function readHintMode(){
+      const el = document.querySelector('input[name="hintMode"]:checked');
+      return el ? el.value : "hotcold";
+    }
+
+    function readTimeMode(){
+      const el = document.querySelector('input[name="timeMode"]:checked');
+      return el ? el.value : "timed";
+    }
+
+    function validateConfig(){
+      const min = Number($("minInput").value.trim());
+      const max = Number($("maxInput").value.trim());
+      const attempts = Number($("attemptsInput").value.trim());
+      const timeLimit = Number($("timeInput").value.trim());
+      const mode = readMode();
+      const hintMode = readHintMode();
+      const timeMode = readTimeMode();
+
+      if (!Number.isInteger(min) || !Number.isInteger(max) || min >= max) {
+        alert("Перевір мінімальне і максимальне число.");
+        return null;
+      }
+      if (!Number.isInteger(attempts) || attempts < 1 || attempts > 100) {
+        alert("Кількість спроб має бути від 1 до 100.");
+        return null;
+      }
+      if (timeMode === "timed" && (!Number.isInteger(timeLimit) || timeLimit < 5 || timeLimit > 3600)) {
+        alert("Час має бути від 5 до 3600 секунд.");
+        return null;
+      }
+
+      return {
+        mode,
+        min,
+        max,
+        attempts,
+        hintMode,
+        timeMode,
+        timeLimit: timeMode === "timed" ? timeLimit : 0
+      };
+    }
+
+    function syncSetupUI(){
+      state.mode = readMode();
+      $("secretField").style.display = state.mode === "solo" ? "none" : "grid";
+      $("timeInput").disabled = readTimeMode() === "untimed";
+      $("infoMode").textContent =
+        state.mode === "solo" ? "Наодинці" :
+        state.mode === "local" ? "На одному телефоні" : "На відстані";
+
+      $("infoRange").textContent = `${$("minInput").value || "?"} — ${$("maxInput").value || "?"}`;
+      $("infoAttempts").textContent = $("attemptsInput").value || "?";
+      $("infoTime").textContent = readTimeMode() === "timed"
+        ? `${$("timeInput").value || "?"} секунд`
+        : "Без часу";
+
+      $("secretHint").textContent =
+        state.mode === "solo"
+          ? "У соло-режимі число буде вибране випадково."
+          : state.mode === "local"
+            ? "Тут вводиться число для другого гравця."
+            : "Тут вводиться число, а потім створюється посилання для друга.";
+    }
+
+    function randomInt(min,max){
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function updateAttemptsUI(){
+      $("attemptsRow").innerHTML = "";
+      for(let i=1;i<=state.config.attempts;i++){
+        const el = document.createElement("div");
+        el.className = "attempt" + (i <= state.triesUsed ? " used" : "");
+        el.textContent = i;
+        $("attemptsRow").appendChild(el);
+      }
+    }
+
+    function updateRoundUI(){
+      const left = Math.max(state.config.attempts - state.triesUsed, 0);
+      $("triesLeft").textContent = left;
+      $("timerLeft").textContent = state.config.timeMode === "timed" ? `${state.timerLeft} с` : "Без часу";
+      $("roundStatus").textContent = state.gameOver ? "Гру завершено" : "Гра триває";
+      $("guessHint").textContent = `Вводь число в межах від ${state.config.min} до ${state.config.max}.`;
+    }
+
+    function setFeedback(text, type=""){
+      $("feedbackBox").className = "feedback";
+      if(type) $("feedbackBox").classList.add(type);
+      $("feedbackBox").textContent = text;
+    }
+
+    function stopTimer(){
+      if(state.timerId){
+        clearInterval(state.timerId);
+        state.timerId = null;
+      }
+    }
+
+    function startTimer(){
+      stopTimer();
+      if(state.config.timeMode === "untimed") return;
+      state.timerId = setInterval(() => {
+        if(state.gameOver){
+          stopTimer();
+          return;
+        }
+        state.timerLeft--;
+        updateRoundUI();
+        if(state.timerLeft <= 0){
+          state.timerLeft = 0;
+          updateRoundUI();
+          finishLose(`Час вийшов. Загадане число було: ${state.secret}.`);
+        }
+      }, 1000);
+    }
+
+    function encodePayload(obj){
+      return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+    }
+    function decodePayload(str){
+      return JSON.parse(decodeURIComponent(escape(atob(str))));
+    }
+
+    function buildGameLink(){
+      const payload = {
+        type: "remote-game",
+        min: state.config.min,
+        max: state.config.max,
+        attempts: state.config.attempts,
+        hintMode: state.config.hintMode,
+        timeMode: state.config.timeMode,
+        timeLimit: state.config.timeLimit,
+        secret: state.secret
+      };
+      const url = new URL(location.href.split("?")[0]);
+      url.searchParams.set("game", encodePayload(payload));
+      return url.toString();
+    }
+
+    function buildReplyLink(text){
+      const payload = {
+        type: "remote-reply",
+        text,
+        tries: state.triesUsed,
+        guesses: state.guesses
+      };
+      const url = new URL(location.href.split("?")[0]);
+      url.searchParams.set("reply", encodePayload(payload));
+      return url.toString();
+    }
+
+    function prepareGame(){
+      const cfg = validateConfig();
+      if(!cfg) return;
+
+      state.mode = cfg.mode;
+      state.config = {
+        min: cfg.min,
+        max: cfg.max,
+        attempts: cfg.attempts,
+        hintMode: cfg.hintMode,
+        timeMode: cfg.timeMode,
+        timeLimit: cfg.timeLimit
+      };
+      state.timerLeft = state.config.timeMode === "timed" ? state.config.timeLimit : 0;
+      state.triesUsed = 0;
+      state.guesses = [];
+      state.gameOver = false;
+      state.remoteGame = false;
+      $("historyRow").innerHTML = "";
+      $("replyArea").style.display = "none";
+
+      if(state.mode === "solo"){
+        state.secret = randomInt(state.config.min, state.config.max);
+        $("readyText").textContent = "Гра готова. Число вже вибране випадково.";
+        $("shareArea").style.display = "none";
+      } else {
+        const secretValue = $("secretInput").value.trim();
+        const secret = Number(secretValue);
+        if(secretValue === "" || !Number.isInteger(secret) || secret < state.config.min || secret > state.config.max){
+          alert(`Введи секретне число в межах від ${state.config.min} до ${state.config.max}.`);
+          return;
+        }
+        state.secret = secret;
+
+        if(state.mode === "local"){
+          $("readyText").textContent = "Число збережено. Передай телефон іншому гравцеві.";
+          $("shareArea").style.display = "none";
+          $("secretInput").value = "";
+        }
+
+        if(state.mode === "remote"){
+          $("readyText").textContent = "Посилання готове. Скопіюй його і відправ другу.";
+          $("shareArea").style.display = "block";
+          $("shareLink").value = buildGameLink();
+        }
+      }
+
+      $("readyMode").textContent =
+        state.mode === "solo" ? "Наодинці" :
+        state.mode === "local" ? "На одному телефоні" : "На відстані";
+      $("readyRange").textContent = `${state.config.min} — ${state.config.max}`;
+      $("readyAttempts").textContent = state.config.attempts;
+      $("readyTime").textContent = state.config.timeMode === "timed" ? `${state.config.timeLimit} секунд` : "Без часу";
+
+      setScreen("screenReady");
+    }
+
+    function startGame(){
+      state.triesUsed = 0;
+      state.guesses = [];
+      state.gameOver = false;
+      state.timerLeft = state.config.timeMode === "timed" ? state.config.timeLimit : 0;
+      $("guessInput").value = "";
+      $("historyRow").innerHTML = "";
+      $("lastAction").textContent = "Очікуємо першу спробу";
+      setFeedback("Зроби першу спробу — і гра дасть підказку.");
+      updateAttemptsUI();
+      updateRoundUI();
+      setScreen("screenGame");
+      startTimer();
+    }
+
+    function getTemperature(diff, spread){
+      const ratio = diff / spread;
+      if(ratio === 0) return {label:"Точно в ціль!", type:"win"};
+      if(ratio > 0.65) return {label:"Антарктида", type:"cold"};
+      if(ratio > 0.48) return {label:"Крижана пустеля", type:"cold"};
+      if(ratio > 0.34) return {label:"Полярна ніч", type:"cold"};
+      if(ratio > 0.22) return {label:"Прохолодно", type:"cold"};
+      if(ratio > 0.12) return {label:"Тепліше", type:"hot"};
+      if(ratio > 0.06) return {label:"Вже пахне жаром", type:"hot"};
+      if(ratio > 0.03) return {label:"Розпечено", type:"hot"};
+      if(ratio > 0.01) return {label:"Пічка", type:"hot"};
+      return {label:"Жерло вулкана", type:"hot"};
+    }
+
+    function addHistory(text){
+      const el = document.createElement("div");
+      el.className = "history-item";
+      el.textContent = text;
+      $("historyRow").appendChild(el);
+    }
+
+    function finishWin(){
+      state.gameOver = true;
+      stopTimer();
+      $("roundStatus").textContent = "Перемога";
+      setFeedback(`🎉 Перемога! Ти вгадав число ${state.secret}.`, "win");
+      if(state.remoteGame){
+        $("replyArea").style.display = "block";
+        $("replyLink").value = buildReplyLink(`Я вгадав число ${state.secret} за ${state.triesUsed} спроб.`);
+      }
+    }
+
+    function finishLose(text){
+      state.gameOver = true;
+      stopTimer();
+      $("roundStatus").textContent = "Поразка";
+      setFeedback(text, "lose");
+      if(state.remoteGame){
+        $("replyArea").style.display = "block";
+        $("replyLink").value = buildReplyLink(`Я не вгадав. Загадане число було ${state.secret}.`);
+      }
+    }
+
+    function checkGuess(){
+      if(state.gameOver) return;
+
+      const value = $("guessInput").value.trim();
+      const guess = Number(value);
+
+      if(value === "" || !Number.isInteger(guess) || guess < state.config.min || guess > state.config.max){
+        alert(`Введи число в межах від ${state.config.min} до ${state.config.max}.`);
+        return;
+      }
+
+      state.triesUsed++;
+      state.guesses.push(guess);
+      updateAttemptsUI();
+      updateRoundUI();
+
+      if(guess === state.secret){
+        addHistory(`${state.triesUsed}. ${guess} · вгадано`);
+        finishWin();
+        return;
+      }
+
+      const dirText = guess < state.secret
+        ? `Загадане число більше, ніж ${guess}.`
+        : `Загадане число менше, ніж ${guess}.`;
+
+      let type = guess < state.secret ? "more" : "less";
+      let extra = "";
+
+      if(state.config.hintMode === "hotcold"){
+        const t = getTemperature(Math.abs(state.secret - guess), Math.max(1, state.config.max - state.config.min));
+        extra = ` ${t.label}.`;
+        type = t.type;
+      }
+
+      setFeedback(dirText + extra, type);
+      $("lastAction").textContent = `${guess} — треба ${guess < state.secret ? "більше" : "менше"}`;
+      addHistory(`${state.triesUsed}. ${guess} · ${guess < state.secret ? "більше" : "менше"}${extra ? ", " + extra.trim().toLowerCase() : ""}`);
+
+      if(state.triesUsed >= state.config.attempts){
+        finishLose(`Спроби закінчилися. Загадане число було: ${state.secret}.`);
+      }
+
+      $("guessInput").value = "";
+    }
+
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        alert("Скопійовано");
+      }catch(e){
+        alert("Не вдалося скопіювати автоматично");
+      }
+    }
+
+    function resetAll(){
+      stopTimer();
+      state.secret = null;
+      state.triesUsed = 0;
+      state.guesses = [];
+      state.gameOver = false;
+      $("secretInput").value = "";
+      $("guessInput").value = "";
+      $("historyRow").innerHTML = "";
+      $("shareArea").style.display = "none";
+      $("replyArea").style.display = "none";
+      syncSetupUI();
+      setScreen("screenSetup");
+    }
+
+    function handleIncomingLink(){
+      const params = new URLSearchParams(location.search);
+
+      const reply = params.get("reply");
+      if(reply){
+        try{
+          const data = decodePayload(reply);
+          if(data.type === "remote-reply"){
+            setTimeout(() => alert(data.text), 200);
+          }
+        }catch(e){}
+      }
+
+      const game = params.get("game");
+      if(game){
+        try{
+          const data = decodePayload(game);
+          if(data.type === "remote-game"){
+            state.mode = "remote";
+            state.remoteGame = true;
+            state.config = {
+              min: data.min,
+              max: data.max,
+              attempts: data.attempts,
+              hintMode: data.hintMode,
+              timeMode: data.timeMode,
+              timeLimit: data.timeLimit
+            };
+            state.secret = data.secret;
+            state.timerLeft = state.config.timeMode === "timed" ? state.config.timeLimit : 0;
+
+            $("remoteRange").textContent = `${data.min} — ${data.max}`;
+            $("remoteAttempts").textContent = data.attempts;
+            $("remoteTime").textContent = data.timeMode === "timed" ? `${data.timeLimit} секунд` : "Без часу";
+
+            setScreen("screenRemoteInfo");
+            return true;
+          }
+        } catch(e){
+          alert("Не вдалося відкрити посилання гри.");
+        }
+      }
+
+      return false;
+    }
+
+    document.querySelectorAll('input[name="gameMode"], input[name="hintMode"], input[name="timeMode"]').forEach(el => {
+      el.addEventListener("change", syncSetupUI);
+    });
+
+    ["minInput","maxInput","attemptsInput","timeInput"].forEach(id => {
+      $(id).addEventListener("input", syncSetupUI);
+    });
+
+    $("createGameBtn").addEventListener("click", prepareGame);
+    $("startGameBtn").addEventListener("click", startGame);
+    $("backBtn").addEventListener("click", () => setScreen("screenSetup"));
+    $("guessBtn").addEventListener("click", checkGuess);
+    $("newGameBtn").addEventListener("click", resetAll);
+    $("resetBtn").addEventListener("click", resetAll);
+    $("copyLinkBtn").addEventListener("click", () => copyText($("shareLink").value));
+    $("copyReplyBtn").addEventListener("click", () => copyText($("replyLink").value));
+    $("remoteStartBtn").addEventListener("click", startGame);
+
+    $("guessInput").addEventListener("keydown", e => {
+      if(e.key === "Enter") checkGuess();
+    });
+
+    $("secretInput").addEventListener("keydown", e => {
+      if(e.key === "Enter") prepareGame();
+    });
+
+    syncSetupUI();
+    if(!handleIncomingLink()){
+      setScreen("screenSetup");
+    }
+  </script>
+</body>
+</html>
+ 
